@@ -1,0 +1,72 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example One</title>
+</head>
+
+<body>
+    <div id="params"></div>
+    <script type="module">
+        import { GUI } from '/dist/lil-gui.esm.js';
+
+        const gui = new GUI();
+
+        const params = {
+            number: 0.5,
+            numberSet: function() { params.number = 0.25; refreshHtml(); },
+            numberStr: '0.5',
+            numberStrSet: function() { params.numberStr = '0.25'; refreshHtml(); },
+            numberStr2: '0.5',
+            numberStrSet2: function() { params.numberStr2 = '0.25'; refreshHtml(); },
+        }
+
+        // Number
+        gui.add( params, 'number', 0, 1 ).step( 0.01 )
+            .listen();
+        gui.add( params, 'numberSet' );
+
+        // Preserve string format, but lose .listen() ability
+        const obj1 = { num: parseFloat(params.numberStr) };
+        gui.add( obj1, 'num', 0, 1 ).step( 0.01 )
+            .onChange( () => {
+                params.numberStr = obj1.num.toString();
+            } )
+            .listen();
+        gui.add( params, 'numberStrSet' );
+
+        // Preserve string format, keep .listen()
+        //  side effect: conversion occurs on every getValue() rather then being read from intermidiate object
+        //  side effect2: .onChange()/onFinishChange() are still free, as conversion is invisible to controller
+        const obj2 = {  };
+        Object.defineProperties( obj2, {
+            num2: {
+                get: function() { return parseFloat(params.numberStr2); },
+                set: function( value ) { params.numberStr2 = value.toString(); }
+            },
+        } );
+        gui.add( obj2, 'num2', 0, 1 ).step( 0.01 )
+            .listen();
+        gui.add( params, 'numberStrSet2' );        
+        
+
+        // --------------------------------------------------
+
+        const printParams = function ( params, container ) {
+            container.innerHTML = `<pre>${ JSON.stringify( params, null, 2 ) }</pre>`
+        }
+        const refreshHtml = function() {
+            printParams( params, document.getElementById('params') );
+        }
+
+        gui.onChange( refreshHtml );
+
+        printParams( params, document.getElementById( 'params' ) );
+
+        window.params = params;
+    </script>
+</body>
+
+</html>
