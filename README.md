@@ -92,3 +92,44 @@ gui.add( obj4a, 'alpha', 0, 255 ).step( 1 )
         params.rrggbbaaStr = params.rrggbbaaStr.slice( 0, -2 ) + value.toString( 16 ).padStart( 2, '0' );
     } );
 ```
+
+### Modify theme with js
+
+```js
+const style =
+`.lil-gui {
+    --background-color: #9892e9;
+    --text-color: #ebebeb;
+    --title-background-color: #6251e9;
+    --title-text-color: #ebebeb;
+    --widget-color: #2b4232;
+    --hover-color: #4c4f22;
+    --focus-color: #1d594b;
+    --number-color: #61b6f9;
+    --string-color: #49d1c6;
+    --font-size: 14px;
+    --input-font-size: 14px;
+    --font-family: monospace;
+    --font-family-mono: Menlo, Monaco, Consolas, "Droid Sans Mono", monospace, "Droid Sans Fallback";
+    --padding: 6px;
+    --spacing: 4px;
+    --widget-height: 20px;
+    --name-width: 45%;
+    --slider-knob-width: 5px;
+    --slider-input-width: 27%;
+    --color-input-width: 27%;
+    --slider-input-min-width: 45px;
+    --color-input-min-width: 45px;
+    --folder-indent: 7px;
+    --widget-padding: 0 0 0 3px;
+    --widget-border-radius: 5px;
+    --checkbox-size: calc(0.75 * var(--widget-height));
+    --scrollbar-width: 5px;
+    --title-height: calc(var(--widget-height) + var(--spacing) * 1.25);
+    --width: 450px;
+}`;
+
+const elem = document.head.appendChild( document.createElement( 'style' ) );
+
+[ ...document.styleSheets ].filter( x => x.ownerNode === elem )[ 0 ].insertRule( style );
+```
